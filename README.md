@@ -1,0 +1,2 @@
+# StockManagement
+.Net exercise
