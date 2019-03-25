@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Button, Form, Modal } from 'react-bootstrap';
+import { Button, Form, Modal, Alert } from 'react-bootstrap';
 import '../stylesheet/main.css';
 
 export class Create extends Component {
@@ -12,9 +12,11 @@ export class Create extends Component {
 
         this.state = {
             show: false,
+            error: false,
+            issues: []
         };
         this.productData = {
-            id: '',
+            //id: '',
             model: '',
             description: '',
             year: '',
@@ -25,6 +27,7 @@ export class Create extends Component {
     }
 
     handleChange = (e) => {
+        this.setState({ error: false });
         this.productData[e.target.name] = e.target.value;
     }
 
@@ -45,11 +48,22 @@ export class Create extends Component {
         })
         .then((res) => res.json())
         .then(data => {
-            console.log(data)
+            console.log(data);
+            var errors = data.errors;
+            if (!errors) {
+                window.location.reload();
+                this.setState({ show: false });
+            } else {
+                var newErrors = [];
+                this.setState({ error: true });
+                for (var i in errors) {
+                    newErrors.push(errors[i][0]);
+                }
+                this.setState({ issues: newErrors });
+                console.log(this.state);
+            }
         })
         .catch((err) => console.log(err));
-
-        this.setState({ show: false });
     }
 
     handleShow() {
@@ -57,7 +71,16 @@ export class Create extends Component {
     }
 
     render() {
-        const { id, model, description, year, brand, kilometers, price } = this.state;
+        const { /*id, */model, description, year, brand, kilometers, price } = this.state;
+
+        var errors = '';
+        if (this.state.error) {
+            errors = this.state.issues.map((error, i) => {
+                return <Alert key={i} variant="danger">
+                            {error}
+                        </Alert>
+            });
+        }
 
         return (
             <div>
@@ -68,19 +91,20 @@ export class Create extends Component {
                 </Button>
 
                 <Modal show={this.state.show} onHide={this.handleClose}>
+
                     <Modal.Header closeButton>
                         <Modal.Title>Add Car</Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
-
+                        {errors}
                         <Form name="product">
-                            <Form.Group controlId="id">
+                            {/*<Form.Group controlId="id">
                                 <Form.Label>Id</Form.Label>
                                 <Form.Control name="id"
                                     type="text"
                                     value={id}
                                     onChange={this.handleChange} />
-                            </Form.Group>
+                            </Form.Group>*/}
                             
                             <Form.Group controlId="model">
                                 <Form.Label>Model</Form.Label>

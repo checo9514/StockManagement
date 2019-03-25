@@ -28,9 +28,6 @@ namespace Stock_management
                 opt.UseInMemoryDatabase("StockList"));
             services.AddScoped<StockDataRepository<Products>, ProductManager>();
 
-            // Call seed
-            //new SeedData(context).Seeder();
-
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
             // In production, the React files will be served from this directory
@@ -71,6 +68,7 @@ namespace Stock_management
                     spa.UseReactDevelopmentServer(npmScript: "start");
                 }
             });
+
         }
     }
 }

@@ -29,10 +29,10 @@ export class Delete extends Component {
             },
         }).then((res) => {
             console.log('Status: ' + res.ok);
-            window.location.reload(); 
+            window.location.reload();
+            this.setState({ show: false });
         }).catch((err) => console.log(err));
         
-        this.setState({ show: false });
     }
 
     handleShow() {

@@ -23,30 +23,29 @@ export class Admin extends Component {
             <table className='table table-striped'>
                 <thead>
                     <tr>
-                        <th>Id</th>
+                        {/*<th>Id</th>*/}
                         <th>Model</th>
                         <th>Description</th>
                         <th>Year</th>
                         <th>Brand</th>
                         <th>Kilometers</th>
                         <th>Price</th>
-                        <th>Manage</th>
+                        <th>Update</th>
+                        <th>Delete</th>
                     </tr>
                 </thead>
                 <tbody>
                     {products.map(product =>
                         <tr key={product.id}>
-                            <td>{product.id}</td>
+                            {/*<td>{product.id}</td>*/}
                             <td>{product.model}</td>
                             <td>{product.description}</td>
                             <td>{product.year}</td>
                             <td>{product.brand}</td>
                             <td>{product.kilometers}</td>
                             <td>{product.price}</td>
-                            <td>
-                                <Update data={product} />
-                                <Delete id={product.id} />
-                            </td>
+                            <td><Update data={product} /></td>
+                            <td><Delete id={product.id} /></td>
                         </tr>
                     )}
                 </tbody>

@@ -17,12 +17,11 @@ namespace Stock_management.Models.DataManager
 
         public IEnumerable<Products> GetAll()
         {
-
             return _context.Products.ToList();
             //throw new NotImplementedException();
         }
 
-        public Products Get(int id)
+        public Products Get(Guid id)
         {
             return _context.Products
                   .FirstOrDefault(e => e.Id == id);

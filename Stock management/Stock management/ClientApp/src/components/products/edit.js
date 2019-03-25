@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Button, Form, Modal } from 'react-bootstrap';
+import { Button, Form, Modal, Alert } from 'react-bootstrap';
 import '../stylesheet/main.css';
 
 export class Update extends Component {
@@ -28,6 +28,8 @@ export class Update extends Component {
         
         this.state = {
             show: false,
+            error: false,
+            issues: [],
             id: this.props.data.id,
             model: this.props.data.model,
             description: this.props.data.description,
@@ -40,7 +42,8 @@ export class Update extends Component {
 
     handleChange = (name, e) => {
         this.setState({ [name]: e.target.value });
-        this.productData[name] = e.target.value; 
+        this.productData[name] = e.target.value;
+        this.setState({ error: false });
     }
 
     handleClose() {
@@ -59,11 +62,25 @@ export class Update extends Component {
         })
         .then((res) => res.json())
         .then(data => {
-            console.log(data)
+            console.log(data);
+            var errors = data.errors;
+            if (!errors) {
+                window.location.reload();
+                this.setState({ show: false });
+            } else {
+                var newErrors = [];
+                this.setState({ error: true });
+                for (var i in errors) {
+                    newErrors.push(errors[i][0]);
+                }
+                this.setState({ issues: newErrors });
+                console.log(this.state);
+            }
         })
-        .catch((err) => console.log(err));
-        
-        this.setState({ show: false });
+        .catch((err) => {
+            window.location.reload();
+            console.log(err)
+        });
     }
 
     handleShow() {
@@ -73,27 +90,36 @@ export class Update extends Component {
     render() {
         const { id, model, description, year, brand, kilometers, price } = this.state;
 
+        var errors = '';
+        if (this.state.error) {
+            errors = this.state.issues.map((error, i) => {
+                return <Alert key={i} variant="danger">
+                    {error}
+                </Alert>
+            });
+        }
         return (
             <div>
-                <Button variant="info" className="space-bottom-top" onClick={this.handleShow}>
+                <Button variant="info" onClick={this.handleShow}>
                     Update
                 </Button>
 
                 <Modal show={this.state.show} onHide={this.handleClose}>
                     <Modal.Header closeButton>
-                        <Modal.Title>Add Car</Modal.Title>
+                        <Modal.Title>Update Car</Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
+                        {errors}
 
                         <Form name="product">
 
-                            <Form.Group controlId="id">
+                            {/*<Form.Group controlId="id">
                                 <Form.Label>Id</Form.Label>
                                 <Form.Control name="id"
                                     type="text"
                                     value={id}
                                     onChange={(e) => this.handleChange("id", e)} />
-                            </Form.Group>
+                            </Form.Group>*/}
 
                             <Form.Group controlId="model">
                                 <Form.Label>Model</Form.Label>

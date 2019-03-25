@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Stock_management.Models
@@ -7,8 +8,9 @@ namespace Stock_management.Models
     public class Products
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        [Key, Column(Order = 0)]
-        public int Id { get; set; }
+        [Key]
+        public Guid Id { get; set; }
+        //public int Id { get; set; }
 
         [Required]
         [StringLength(50, ErrorMessage = "Model can't be longer than 50 characters")]

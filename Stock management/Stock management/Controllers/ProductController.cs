@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore.Internal;
 using Stock_management.Models;
 using Stock_management.Models.Repository;
 
@@ -17,6 +19,35 @@ namespace Stock_management.Controllers
         public ProductController(StockDataRepository<Products> dataRepository)
         {
             _dataRepository = dataRepository;
+            IEnumerable<Products> products = _dataRepository.GetAll();
+            bool hasElements = products.Any();
+
+            if (!hasElements)
+            {
+                var product1 = new Products
+                {
+                    //Id = 1,
+                    Model = "Mazda 3",
+                    Description = "New Model",
+                    Year = 2018,
+                    Brand = "Mazda",
+                    Kilometers = 100,
+                    Price = 320689
+                };
+
+                var product2 = new Products
+                {
+                    //Id = 2,
+                    Model = "KIA Forte",
+                    Description = "Innovation",
+                    Year = 2019,
+                    Brand = "KIA",
+                    Kilometers = 68,
+                    Price = 378569
+                };
+                _dataRepository.Add(product1);
+                _dataRepository.Add(product2);
+            }
         }
 
         // GET: api/product
@@ -29,7 +60,7 @@ namespace Stock_management.Controllers
 
         // GET api/product/5
         [HttpGet("{id}", Name = "Get")]
-        public IActionResult Get(int id)
+        public IActionResult Get(Guid id)
         {
             Products product = _dataRepository.Get(id);
 
@@ -59,7 +90,7 @@ namespace Stock_management.Controllers
 
         // PUT api/product/5
         [HttpPut("{id}")]
-        public IActionResult Put(int id, [FromBody] Products product)
+        public IActionResult Put(Guid id, [FromBody] Products product)
         {
             if (product == null)
             {
@@ -78,7 +109,7 @@ namespace Stock_management.Controllers
 
         // DELETE api/product/5
         [HttpDelete("{id}")]
-        public IActionResult Delete(int id)
+        public IActionResult Delete(Guid id)
         {
             Products product = _dataRepository.Get(id);
             if (product == null)
